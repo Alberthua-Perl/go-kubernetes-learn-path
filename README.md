@@ -1,3 +1,3 @@
-# learning-golang
+# gopl.io
 
-Report path of learning golang.
+Learning path about the book 'The Go Programming Language'.
