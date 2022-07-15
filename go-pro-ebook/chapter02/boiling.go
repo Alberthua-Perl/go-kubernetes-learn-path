@@ -3,6 +3,7 @@ package main
 import "fmt"
 
 const boilingF = 212.0
+// The const can be accessed from other files from package.
 
 func main() {
 	var f = boilingF
