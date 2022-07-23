@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 )
 
 func main() {
@@ -32,7 +33,10 @@ func declaration() {
 	fmt.Printf("Print vaule of i, j, k, b, g, p: %d, %d, %d, %t, %g, %s\n", i, j, k, b, g, p)
 	
 	// Note: how to use os.Open() function?
-	// f, err := os.Open("./file1")
+	f, err := os.ReadFile("./osReadFile-func-test.txt")
+	if err == nil {
+		os.Stdout.Write(f)
+	}	
 }
 
 // pointer basic
