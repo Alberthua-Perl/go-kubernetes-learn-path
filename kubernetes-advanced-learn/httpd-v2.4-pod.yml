@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: httpd-debian
+  name: httpd-debian
+  namespace: sdn-multitenant
+spec:
+  containers:
+  - image: registry.lab.example.com/httpd:2.4
+    imagePullPolicy: IfNotPresent
+    name: httpd-debian
+    command: ["/bin/sh", "-c", "sleep 86400s"]
+  serviceAccountName: httpd-debian-adm
+  serviceAccount: httpd-debian-adm

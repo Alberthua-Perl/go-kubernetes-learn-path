@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: alpine
+  name: alpine
+  namespace: sdn-multitenant
+spec:
+  containers:
+  - image: registry.lab.example.com/alpine:3.16.2
+    imagePullPolicy: IfNotPresent
+    name: alpine
+    command: ["/bin/sh", "-c", "sleep 86400s"]
+  serviceAccountName: alpine-adm
+  serviceAccount: alpine-adm
