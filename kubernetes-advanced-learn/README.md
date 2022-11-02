@@ -1,5 +1,5 @@
-## kubernetes-advanced-learn
+## Kubernetes Advanced Learn
 
-- kubernetes-advanced-learn includes associated yaml files of kubernetes and other programmes.
+- kubernetes-advanced-learn includes associated yaml files for kubernetes and other programmes.
 
-- resource definied file format: <namespace>-<name>-<type>.yaml
+- YAML resource definied file format: `<namespace>-<name>-<type>.yaml`
