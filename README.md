@@ -4,4 +4,6 @@
 
 - 👨‍💻 Learning path about the book *The Go Programming Language*.
 
-- 🐳 kubernetes-advanced-learn includes associated yaml files and programmes.
+- 🐳 kIncludes associated yaml files and programmes for kubernetes advanced learn path.
+
+- YAML resource definied file format: `<namespace>-<name>-<type>.yaml`
