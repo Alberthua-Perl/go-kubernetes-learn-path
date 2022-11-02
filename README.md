@@ -2,8 +2,8 @@
 
 - Created on 2022-05-12 by Alberthua-Perl.
 
-- 👨‍💻 Learning path about the book *The Go Programming Language*.
+- 👨‍💻 Learning path about *The Go Programming Language* ebook.
 
-- 🐳 kIncludes associated yaml files and programmes for kubernetes advanced learn path.
+- 🐳 Include associated yaml files and programmes for kubernetes advanced learn path.
 
-- YAML resource definied file format: `<namespace>-<name>-<type>.yaml`
+- 📜 YAML resource definied file format: `<namespace>-<name>-<type>.yaml`
