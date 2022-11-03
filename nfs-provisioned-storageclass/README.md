@@ -4,4 +4,6 @@
 
 - According to `{00..04}-{resource-definied-name}.yml` to create object.
 
-- 🤘 You can get more specified doc on [kubernetes-retired / external-storage](https://github.com/kubernetes-retired/external-storage/tree/master/nfs-client).
+- 🤘 If use yaml files to create resources on OpenShift cluster, you can get more specified doc on [kubernetes-retired / external-storage](https://github.com/kubernetes-retired/external-storage/tree/master/nfs-client).
+
+- Kubernetes NFS-Client Privisioner demo has been tested on `Red Hat OpenShift Container Platform 3.9` and it works OK.
