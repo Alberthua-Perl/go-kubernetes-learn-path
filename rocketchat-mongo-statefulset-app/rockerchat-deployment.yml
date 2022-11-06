@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rocketchat
+  labels:
+    app: rocketchat
+  namespace: rocketchat-mongodb-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rocketchat
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: rocketchat
+    spec:
+      containers:
+        - image: docker.io/rocketchat/rocket.chat:3.18.7
+          imagePullPolicy: IfNotPresent
+          name: rocketchat
+          env:
+            - name: PORT
+              value: "3000"
+              # use "" to quote port number
+            - name: MONGO_URL
+              value: "mongodb://rocketmongo-0.mongodb-internal:27017/rocketchat"
+            - name: MONGO_OPLOG_URL
+              value: "mongodb://rocketmongo-0.mongodb-internal:27017/local?replicaSet=rs0"
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  labels: 
+    app: rocketchat
+  name: rocketchat
+  namespace: rocketchat-mongodb-app
+spec: 
+  ports:
+    # the port that this service should serve on
+    - port: 30000
+      targetPort: 3000
+      protocol: TCP
+  # label keys and values that must match in order to receive traffic for this service
+  selector: 
+    app: rocketchat
+  type: NodePort

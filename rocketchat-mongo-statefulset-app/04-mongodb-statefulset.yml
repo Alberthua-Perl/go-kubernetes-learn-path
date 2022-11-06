@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rocketmongo
+  labels:
+    app: rocketmongo
+spec:
+  serviceName: mongodb-internal
+  replicas: 3
+  selector:
+    matchLabels:
+      app: rocketmongo
+  template:
+    metadata:
+      labels:
+        app: rocketmongo
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: rocketmongo
+          image: docker.io/library/mongo:4.0
+          command:
+            - mongod
+            - "--bind_ip_all"
+            - "--replSet"
+            - rs0
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: mongo-volume
+              mountPath: /data/db
+  volumeClaimTemplates:
+    - metadata:
+        name: mongo-volume
+        labels: 
+          app: rocketmongo
+      spec:
+        storageClassName: managed-nfs-storage
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 3Gi
