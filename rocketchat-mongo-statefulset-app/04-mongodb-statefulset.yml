@@ -15,7 +15,7 @@ spec:
       labels:
         app: rocketmongo
     spec:
-      terminationGracePeriodSeconds: 10
+      terminationGracePeriodSeconds: 30
       containers:
         - name: rocketmongo
           image: docker.io/library/mongo:4.0
