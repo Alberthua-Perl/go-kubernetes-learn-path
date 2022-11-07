@@ -8,6 +8,6 @@
 
 > ✨ Note: `kubernetes-retired / external-storage` deprecated to [kubernetes-sigs / nfs-subdir-external-provisioner](https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner)!
 
-- In fortunately `deployment` and `storageclass` is also be supported in Red Hat OpenShift Container Platform v3.9 (OCP v3.9).
+- In fortunately `deployment` and `storageclass` are also be supported in Red Hat OpenShift Container Platform v3.9 (OCP v3.9).
 
 - Also Kubernetes NFS-Client Privisioner demo has been tested on OCP v3.9 and it works OK.
