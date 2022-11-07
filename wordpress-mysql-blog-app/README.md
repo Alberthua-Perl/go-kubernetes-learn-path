@@ -1,16 +1,18 @@
-## WordPress-MySQL Blog application on Red Hat OpenShift v3.9
+## WordPress-MySQL blog application on Red Hat OpenShift Container Platform v3.9
+
+- Practice environment: Red Hat OpenShift Container Platform v3.9
 
 - Deploy blog application:
 
   - Create myblog project.
 
-  - Create pv and pvc for mysql in myblog project.
+  - Create static pv and pvc for mysql in myblog project.
 
-  - Create mysql pod and service as database backend where not use deploymentconfing and statefulset resource.
+  - Create mysql pod and service as database backend where not use statefulset resource.
 
-  - Use the same method to create pv and pvc for wordpress.
+  - Use the same method to create static pv and pvc for wordpress.
 
-  - Create serviceaccount named wp-admin and associated anyuid scc to wp-admin.
+  - ❗Create serviceaccount named w`wp-admin` and associated `anyuid` scc to wp-admin.
 
     > Note: 
     > Because wordpress image from docker.io in which root run the container, but in openshift use random user to run pod instead of root.
