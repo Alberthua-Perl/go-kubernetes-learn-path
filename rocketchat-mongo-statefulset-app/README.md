@@ -28,7 +28,8 @@
 
   ```bash
   $ kubectl create namespace rocketchat-mongodb-app
-  $ kubectl apply -f 00-nfs-provisioned-rbac.yml 01-nfs-provisioned-deployment.yml 02-nfs-provisioned-class.yml -n rocketchat-mongodb-app
+  $ kubectl apply -f \
+    00-nfs-provisioned-rbac.yml 01-nfs-provisioned-deployment.yml 02-nfs-provisioned-class.yml -n rocketchat-mongodb-app
   $ kubectl apply -f 03-mongodb-internal-headless-svc.yml -n rocketchat-mongodb-app
   $ kubectl apply -f 04-mongodb-statefulset.yml -n rocketchat-mongodb-app
   # 该资源创建完成后并未实现 MongoDB 的 ReplicaSet 模式集群，需登录至其中的一个节点实现集群的初始化及 mongo 节点的添加。
@@ -66,3 +67,12 @@
 - 可通过 Rocket.Chat pod 日志中的 URL 链接登录应用并注册账户使用。
 
   ![](https://github.com/Alberthua-Perl/go-kubernetes-learn-path/blob/hotfixes/rocketchat-mongo-statefulset-app/images/rocketchat-login.png)
+  
+### 参考链接：
+
+- [Running MongoDB on Kubernetes with StatefulSets](https://kubernetes.io/blog/2017/01/running-mongodb-on-kubernetes-with-statefulsets/)
+
+- [Running Rocket.Chat and MongoDB on Kubernetes with StatefulSets](https://dev.to/jmarhee/running-rocketchat-and-mongodb-on-kubernetes-with-statefulsets-431o)
+
+- [Deploy Rocket chat server using Kubernetes](https://ajorloo.medium.com/deploy-rocket-chat-server-using-kubernetes-2d6c4228853)
+  
