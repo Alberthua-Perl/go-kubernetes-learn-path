@@ -1,4 +1,4 @@
-## Rocket.Chat 与 MongoDB 数据库集群部署 Kubernetes 实时交流平台
+## Kubernetes 中部署 Rocket.Chat 与 MongoDB 数据库实时交流平台
 
 ### 部署环境说明：
 
@@ -33,10 +33,36 @@
   $ kubectl apply -f 04-mongodb-statefulset.yml -n rocketchat-mongodb-app
   # 该资源创建完成后并未实现 MongoDB 的 ReplicaSet 模式集群，需登录至其中的一个节点实现集群的初始化及 mongo 节点的添加。
   ```
-  
-  
-  
-  
-  
-  
-  
+  ```bash
+  $ kubectl exec -it rocketmongo-0 -n rocketchat-mongodb-app -- mongo
+    # 进入 mongo 节点进行集群的初始化与配置
+    ...
+    > rs.initiate()  # 初始化集群
+    > var config = rs.conf()
+    > config.members[0].host="rocketmongo-0.mongodb-internal:27017"  # 通过 headless service 指向 mongo 节点，将该节点配置为 primary 节点。
+    > rs.reconfig(config)  # 刷新集群配置
+    > rs.add("rocketmongo-1.mongodb-internal:27017")
+    > rs.add("rocketmongo-2.mongodb-internal:27017")  # 添加额外的 mongo 节点
+    > rs.status()  # 查看集群的状态
+    > rs.isMaster()  # 确认当前 mongo 节点是否为 primary 节点 
+    > exit  # 退出 MongoDB Shell
+    ...
+  ```
+  ```bash
+  $ kubectl apply -f 05-rockerchat-deployment.yml -n rocketchat-mongodb-app
+  # 部署前端 Rocket.Chat 应用
+  ```
+
+  🤘 如下所示，刷新 Rocket.Chat Pod 日志可确认其与 MongoDB 集群成功连接：
+
+  ![]()
+
+### 确认应用的资源与登录认证：
+
+- 该应用所涉及的资源对象如下所示：
+
+  ![]()
+
+- 可通过 Rocket.Chat Pod 日志中的 URL 链接登录应用并注册账户使用。
+
+  ![]()
