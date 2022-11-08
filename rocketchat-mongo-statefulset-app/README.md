@@ -1,4 +1,4 @@
-## Kubernetes 中部署 Rocket.Chat 与 MongoDB 数据库实时交流平台
+## ☸️ Kubernetes 中部署 Rocket.Chat 与 MongoDB 数据库实时交流平台
 
 ### 部署环境说明：
 
@@ -14,11 +14,11 @@
 
 ### 部署方式及步骤：
 
-- 该应用后端的 MongoDB 集群使用 NFS 作为动态 PV 的提供者，需提前配置 NFS 服务器节点用于提供 PV。
+- 💥 该应用后端的 MongoDB 集群使用 NFS 作为动态 PV 的提供者，需提前配置 NFS 服务器节点用于提供 PV。
 
-- MongoDB 集群使用 `StatefulSet` 部署，而该资源需使用 `StorageClass` 资源实现卷声明模板（`volumeClaimTemplates`）。
+- MongoDB 集群使用 `StatefulSet` 部署，而该资源需使用 `StorageClass` 实现卷声明模板（`volumeClaimTemplates`）。
 
-- Kubernetes 中未集成 NFS 类型的内部调配者（`internal provisioner`），因此需要外部的 `nfs-client-provisioner` 作为对外部 NFS 向集群的引入调配以支持动态 PV 提供。
+- Kubernetes 中未集成 NFS 类型的内部调配者（`internal provisioner`），因此需使用 `nfs-client-provisioner` 将外部 NFS 引入集群并调配以支持动态 PV。
 
 - nfs-client-provisioner 在集群中的部署可参考该 [链接](https://github.com/Alberthua-Perl/go-kubernetes-learn-path/tree/hotfixes/nfs-provisioned-storageclass)。
 
@@ -53,16 +53,16 @@
   # 部署前端 Rocket.Chat 应用
   ```
 
-  🤘 如下所示，刷新 Rocket.Chat Pod 日志可确认其与 MongoDB 集群成功连接：
+  🤘 如下所示，刷新 Rocket.Chat pod 日志可确认其与 MongoDB 集群成功连接：
 
-  ![]()
+  ![](https://github.com/Alberthua-Perl/go-kubernetes-learn-path/blob/hotfixes/rocketchat-mongo-statefulset-app/images/rocketchat-mongo-connect-successfully.png)
 
-### 确认应用的资源与登录认证：
+### 确认应用资源与登录认证：
 
 - 该应用所涉及的资源对象如下所示：
 
-  ![]()
+  ![](https://github.com/Alberthua-Perl/go-kubernetes-learn-path/blob/hotfixes/rocketchat-mongo-statefulset-app/images/rocketchat-mongo-app-resources.png)
 
-- 可通过 Rocket.Chat Pod 日志中的 URL 链接登录应用并注册账户使用。
+- 可通过 Rocket.Chat pod 日志中的 URL 链接登录应用并注册账户使用。
 
-  ![]()
+  ![](https://github.com/Alberthua-Perl/go-kubernetes-learn-path/blob/hotfixes/rocketchat-mongo-statefulset-app/images/rocketchat-login.png)
