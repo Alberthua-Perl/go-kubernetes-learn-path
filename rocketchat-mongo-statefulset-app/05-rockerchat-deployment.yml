@@ -7,6 +7,7 @@ metadata:
   namespace: rocketchat-mongodb-app
 spec:
   replicas: 2
+  # use two replicas as loadbalance frontends
   selector:
     matchLabels:
       app: rocketchat
@@ -18,18 +19,23 @@ spec:
     spec:
       containers:
         - image: docker.io/rocketchat/rocket.chat:3.18.7
+          # rocket.chat official LTS image
           imagePullPolicy: IfNotPresent
           name: rocketchat
           env:
             - name: PORT
               value: "3000"
-              # use "" to quote port number
+              # must use "" to quote port number on environment variable
             - name: MONGO_URL
               #value: "mongodb://rocketmongo-0.mongodb-internal:27017/rocketchat"
               value: "mongodb://rocketmongo-0.mongodb-internal,rocketmongo-1.mongodb-internal,rocketmongo-2.mongodb-internal:27017/rocketchat"
             - name: MONGO_OPLOG_URL
               #value: "mongodb://rocketmongo-0.mongodb-internal:27017/local?replicaSet=rs0"
               value: "mongodb://rocketmongo-0.mongodb-internal,rocketmongo-1.mongodb-internal,rocketmongo-2.mongodb-internal:27017/local"
+              # Note:
+              #   MONGO_URL and MONGO_OPLOG_URL define primary and secondary mongo endpoints like <endpoint>.<headless_service> which can be connected 
+              #   by rocket.chat application
+              #   rocket.chat find master mongo endpoint of cluster
           ports:
             - containerPort: 3000
               protocol: TCP
