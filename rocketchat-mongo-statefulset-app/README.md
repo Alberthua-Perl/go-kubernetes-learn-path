@@ -18,7 +18,7 @@
 
 - MongoDB 集群使用 `StatefulSet` 部署，而该资源需使用 `StorageClass` 实现卷声明模板（`volumeClaimTemplates`）。
 
-- Kubernetes 中未集成 NFS 类型的内部调配者（`internal provisioner`），因此需使用 `nfs-client-provisioner` 将外部 NFS 引入集群并调配以支持动态 PV。
+- Kubernetes 中未集成 NFS 类型的内部调配者（`internal privisioner`），因此需使用 `nfs-client-provisioner` 将外部 NFS 调配至集群以支持 PV 动态分配。
 
 - nfs-client-provisioner 在集群中的部署可参考该 [链接](https://github.com/Alberthua-Perl/go-kubernetes-learn-path/tree/hotfixes/nfs-provisioned-storageclass)。
 
@@ -40,7 +40,8 @@
     ...
     > rs.initiate()  # 初始化集群
     > var config = rs.conf()
-    > config.members[0].host="rocketmongo-0.mongodb-internal:27017"  # 通过 headless service 指向 mongo 节点，将该节点配置为 primary 节点。
+    > config.members[0].host="rocketmongo-0.mongodb-internal:27017"  
+      # 通过 headless service 指向 mongo 节点，将该节点配置为 primary 节点。
     > rs.reconfig(config)  # 刷新集群配置
     > rs.add("rocketmongo-1.mongodb-internal:27017")
     > rs.add("rocketmongo-2.mongodb-internal:27017")  # 添加额外的 mongo 节点
