@@ -12,7 +12,7 @@
 
   - Use the same method to create static pv and pvc for wordpress.
 
-  - ✨ Create serviceaccount named w`wp-admin` and associated `anyuid` scc to wp-admin.
+  - ✨ Create serviceaccount named `wp-admin` and associated `anyuid` scc to wp-admin.
 
     > Note: 
     > Because wordpress image from docker.io in which root run the container, but in openshift use random user to run pod instead of root.
