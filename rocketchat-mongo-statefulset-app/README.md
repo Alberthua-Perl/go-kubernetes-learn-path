@@ -20,6 +20,8 @@
 
 - Kubernetes 中未集成 NFS 类型的内部调配者（`internal privisioner`），因此需使用 `nfs-client-provisioner` 将外部 NFS 调配至集群以支持 PV 动态分配。
 
+> 🤘 StorageClass 调用链：`Kubernets provisioner (dynamically provisioned PV) -> StorageClass -> PVC -> Po`
+
 - nfs-client-provisioner 在集群中的部署可参考该 [链接](https://github.com/Alberthua-Perl/go-kubernetes-learn-path/tree/hotfixes/nfs-provisioned-storageclass)。
 
 > 注意：nfs-client-provisioner pod 与应用 pod 部署于同一命名空间（namespace）中。
