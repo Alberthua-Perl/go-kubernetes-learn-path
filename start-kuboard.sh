@@ -1,6 +1,7 @@
 #!/bin/bash
 #
-# Start deploy Kuboard v3 to manage multi Kubernetes clusters.
+# Start deploy Kuboard v3 to manage multi Kubernetes clusters
+# according to https://kuboard.cn/install/v3/install.html
 # Created by lhua <hualongfeiyyy@163.com> on 2022-11-15.
 
 sudo docker run -d \
