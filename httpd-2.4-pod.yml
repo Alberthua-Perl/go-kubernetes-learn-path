@@ -4,7 +4,6 @@ metadata:
   labels:
     app: httpd-debian
   name: httpd-debian
-  namespace: sdn-multitenant
 spec:
   containers:
   - image: registry.lab.example.com/httpd:2.4

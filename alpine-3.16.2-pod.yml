@@ -4,7 +4,6 @@ metadata:
   labels:
     app: alpine
   name: alpine
-  namespace: sdn-multitenant
 spec:
   containers:
   - image: registry.lab.example.com/alpine:3.16.2
