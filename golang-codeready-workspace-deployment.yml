@@ -37,6 +37,7 @@ spec:
     spec:
       containers:
       - image: quay-registry.lab.example.com/godev/golang-code-server:v1.1
+        # image also pulled from quay.io/alberthua/golang-code-server:v1.1
         imagePullPolicy: IfNotPresent
         name: golang-codeready-workspace
         ports:
