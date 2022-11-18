@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  labels: 
+    name: golang-codeready-workspace
+  name: golang-codeready-workspace
+  namespace: codeready-workspace
+spec: 
+  ports:
+    # the port that this service should serve on
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+      nodePort: 30001
+  # label keys and values that must match in order to receive traffic for this service
+  selector: 
+    app: golang-codeready-workspace
+  type: NodePort
+---  
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: golang-codeready-workspace
+  name: golang-codeready-workspace
+  namespace: codeready-workspace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: golang-codeready-workspace
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: golang-codeready-workspace
+    spec:
+      containers:
+      - image: quay-registry.lab.example.com/godev/golang-code-server:v1.1
+        imagePullPolicy: IfNotPresent
+        name: golang-codeready-workspace
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
