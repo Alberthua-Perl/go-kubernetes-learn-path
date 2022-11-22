@@ -1,0 +1,60 @@
+# Kubernetes v1.22.1
+apiVersion: v1
+kind: Service
+metadata: 
+  labels: 
+    app: <value>
+  name: <value>
+  namespace: <value>
+spec: 
+  ports:
+    # the port that this service should serve on
+    - port: <value>
+      targetPort: <value>
+      protocol: TCP
+      nodePort: <value>
+  # label keys and values that must match with label on pod in order to receive traffic for this service
+  selector: 
+    app: <value>
+  type: NodePort
+---  
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <value>
+  labels:
+    app: <value>
+  namespace: <value>
+spec:
+  replicas: 2
+  # use two replicas as loadbalance frontends
+  selector:
+    matchLabels:
+      app: <value>
+      # ReplicaSet use label to select pods with the same label
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: <value>
+        # pod label
+    spec:
+      containers:
+        - image: <value>
+          imagePullPolicy: IfNotPresent
+          name: <value>
+          env:
+            - name: <value>
+              value: <value>
+            - name: <value>
+              value: <value>
+            - name: <value>
+              value: <value>
+          # must use "" to quote port number on environment variable    
+          ports:
+            - containerPort: <value>
+              protocol: TCP
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
