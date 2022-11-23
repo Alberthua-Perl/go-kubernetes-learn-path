@@ -1,5 +1,7 @@
 ## WordPress-MySQL blog application on Red Hat OpenShift Container Platform v3.9
 
+[![Docker Repository on Quay](https://quay.io/repository/alberthua/wordpress/status "Docker Repository on Quay")](https://quay.io/repository/alberthua/wordpress) [![Docker Repository on Quay](https://quay.io/repository/alberthua/mysql-55-rhel7/status "Docker Repository on Quay")](https://quay.io/repository/alberthua/mysql-55-rhel7)
+
 - Practice environment: Red Hat OpenShift Container Platform v3.9
 
 - Deploy blog application:

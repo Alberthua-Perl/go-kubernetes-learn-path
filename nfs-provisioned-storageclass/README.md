@@ -1,5 +1,7 @@
 ## Example for Kubernetes NFS-Client Privisioner
 
+[![Docker Repository on Quay](https://quay.io/repository/alberthua/nfs-client-provisioner/status "Docker Repository on Quay")](https://quay.io/repository/alberthua/nfs-client-provisioner)
+
 - Practice environment:
 
   - Kubernetes v1.22.1 cluster

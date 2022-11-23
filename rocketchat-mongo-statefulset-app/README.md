@@ -1,5 +1,7 @@
 ## ☸️ Kubernetes 中部署 Rocket.Chat 与 MongoDB 数据库实时交流平台
 
+[![Docker Repository on Quay](https://quay.io/repository/alberthua/rocket.chat/status "Docker Repository on Quay")](https://quay.io/repository/alberthua/rocket.chat) [![Docker Repository on Quay](https://quay.io/repository/alberthua/mongo/status "Docker Repository on Quay")](https://quay.io/repository/alberthua/mongo)
+
 ### 部署环境说明：
 
 - Kubernetes 版本：`v1.22.1`
