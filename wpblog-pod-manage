@@ -1,0 +1,215 @@
+#!/bin/bash
+#
+# Create and manage WordPress MySQL blog application in pod
+# running on Fedora CoreOS 36.
+#
+# Two methods to provision application:
+# 	- 1. podman pod create and attach other containers
+#   - 2. podman kube play according to structed Kubernetes YAML
+#
+# Created by hualf on 2022-12-01
+#
+
+function env_precheck() {
+  if [[ `getenforce` == 'Enforcing' ]]; then
+  	echo "---> Please disabled SELinux, then deploy blog pod..."
+  	exit 2
+  fi
+  # WARNING: disabled selinux to resolve directory permission error
+  
+  VERIFY_PAUSE=$(podman images | grep 'k8s.gcr.io/pause' | head -n1 | awk '{print $1}')
+  if [[ ${VERIFY_PAUSE} == 'k8s.gcr.io/pause' ]]; then
+  	echo -e "\n---> Start deploy blog pod..."
+	else
+  	echo -e "\n---> Get k8s.gcr.io/pause:3.5 image..."
+  	podman pull quay.io/alberthua/pause:3.5
+  	podman tag quay.io/alberthua/pause:3.5 k8s.gcr.io/pause:3.5
+  	podman rmi quay.io/alberthua/pause:3.5
+  fi				
+}
+
+MYSQL_DB_DIR=/tmp/wpdbfiles
+WORDPRESS_FRONT_DIR=/tmp/wpfront
+
+POD_NAME=mywpblog
+MYSQL_USER=wp_user
+MYSQL_PASSWORD=wp_pass
+MYSQL_DATABASE=wp_blog
+MYSQL_ROOT_PASSWORD=redhat
+MYSQL_CON=wpdatabase
+WORDPRESS_CON=wpfrontend
+
+function wpblog_pod_deploy() {
+  mkdir ${MYSQL_DB_DIR} ${WORDPRESS_FRONT_DIR}
+  sudo chown -R 100998:100998 ${MYSQL_DB_DIR}
+  sudo chown -R 100032:100032 ${WORDPRESS_FRONT_DIR}
+  # change subuid for directory
+  sudo chmod -R 775 ${MYSQL_DB_DIR} ${WORDPRESS_FRONT_DIR}
+  # create persistent volume for wordpress and mysql container
+    
+  echo -e "\n---> Create ${POD_NAME} pod..."
+  podman pod create -p 8080:80 -p 3306:3306 ${POD_NAME}
+  # create pod published 8080 and 3306 port
+  
+  echo -e "\n---> Create ${MYSQL_CON} and ${WORDPRESS_CON} container..."
+  podman run -d --name=${MYSQL_CON} \
+    -v ${MYSQL_DB_DIR}:/var/lib/mysql:Z \
+    -e MYSQL_USER=${MYSQL_USER} \
+    -e MYSQL_PASSWORD=${MYSQL_PASSWORD} \
+    -e MYSQL_DATABASE=${MYSQL_DATABASE} \
+    -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} \
+    --pod ${POD_NAME} \
+  	docker.io/library/mysql:5.7.40-debian
+  
+  podman run -d --name=${WORDPRESS_CON} \
+    -v ${WORDPRESS_FRONT_DIR}:/var/www/html:Z \
+    -e WORDPRESS_DB_HOST=${MYSQL_CON} \
+    -e WORDPRESS_DB_USER=${MYSQL_USER} \
+    -e WORDPRESS_DB_PASSWORD=${MYSQL_PASSWORD} \
+    -e WORDPRESS_DB_NAME=${MYSQL_DATABASE} \
+    --pod ${POD_NAME} \
+    docker.io/library/wordpress:6.1.1-php7.4-apache
+  # Note: 
+  #   use mysql container name for WORDPRESS_DB_HOST make wordpress
+  #   to connect with mysql in pod
+  
+  echo -e "\n---> Pod and containers as followings..."
+  podman pod ps; echo ''
+  podman ps -a
+}
+
+# Note:
+#		Use following command to generate pod definied file from existing pod:
+# 		$ podman generate kube mywpblog > mywpblog-pod.yml
+
+function wpblog_kube_deploy() {
+	echo -e "\n---> Use podman kube play to create and run pod..."
+
+  mkdir ${MYSQL_DB_DIR} ${WORDPRESS_FRONT_DIR}
+  sudo chown -R 100998:100998 ${MYSQL_DB_DIR}
+  sudo chown -R 100032:100032 ${WORDPRESS_FRONT_DIR}
+  # change subuid for directory
+  sudo chmod -R 775 ${MYSQL_DB_DIR} ${WORDPRESS_FRONT_DIR}
+  # create persistent volume for wordpress and mysql container	
+
+	cat > mywpblog-pod.yml << EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: mywpblog
+  name: mywpblog
+spec:
+  automountServiceAccountToken: false
+  containers:
+  - args:
+    - mysqld
+    env:
+    - name: MYSQL_USER
+      value: wp_user
+    - name: MYSQL_ROOT_PASSWORD
+      value: redhat
+    - name: MYSQL_PASSWORD
+      value: wp_pass
+    - name: MYSQL_DATABASE
+      value: wp_blog
+    image: docker.io/library/mysql:5.7.40-debian
+    name: wpdatabase
+    ports:
+    - containerPort: 3306
+      hostPort: 3306
+    resources: {}
+    securityContext:
+      capabilities:
+        drop:
+        - CAP_MKNOD
+        - CAP_NET_RAW
+        - CAP_AUDIT_WRITE
+    volumeMounts:
+    - mountPath: /var/lib/mysql
+      name: tmp-wpdbfiles-host-0
+  - args:
+    - apache2-foreground
+    env:
+    - name: WORDPRESS_DB_NAME
+      value: wp_blog
+    - name: WORDPRESS_DB_HOST
+      value: "0.0.0.0"
+    - name: WORDPRESS_DB_USER
+      value: wp_user
+    - name: WORDPRESS_DB_PASSWORD
+      value: wp_pass
+    image: docker.io/library/wordpress:6.1.1-php7.4-apache
+    name: wpfrontend
+    ports:
+      - containerPort: 80
+        hostPort: 8080
+    resources: {}
+    securityContext:
+      capabilities:
+        drop:
+        - CAP_MKNOD
+        - CAP_NET_RAW
+        - CAP_AUDIT_WRITE
+    volumeMounts:
+    - mountPath: /var/www/html
+      name: tmp-wpfront-host-0
+  enableServiceLinks: false
+  hostname: mywpblog
+  restartPolicy: Never
+  volumes:
+  - hostPath:
+      path: /tmp/wpdbfiles
+      type: Directory
+    name: tmp-wpdbfiles-host-0
+  - hostPath:
+      path: /tmp/wpfront
+      type: Directory
+    name: tmp-wpfront-host-0
+status: {}
+EOF
+# Note:
+# 	WORDPRESS_DB_HOST definied as '0.0.0.0' because two containers use same network namespace
+# 	WORDPRESS_DB_HOST is different from 'podman pod create' and 'podman kube play'.
+
+	podman kube play mywpblog-pod.yml
+	# use pod definied file to create pod like Kubernetes
+	echo -e "\n---> Pod and containers as followings..."
+	podman pod ps; echo ''
+	podman ps -a
+}
+
+function wpblog_destroy() {
+	echo "---> Destroy wpblog pod and persistent directory..."
+	podman pod stop ${POD_NAME}
+	podman pod rm ${POD_NAME}
+	[[ $? -eq 0 ]] && echo "--> Remove pod and container successfully..."
+	sudo rm -rf ${MYSQL_DB_DIR} ${WORDPRESS_FRONT_DIR}
+	[[ $? -eq 0 ]] && echo "--> Remove persistent directory successfully..."
+}
+
+# podman kube down mywpblog-pod.yml
+# down and delete pod and containers from mywpblog-pod.yml
+
+case $1 in
+	--pod-deploy)
+    env_precheck
+		wpblog_pod_deploy
+		;;
+  --kube-deploy)
+    env_precheck
+		wpblog_kube_deploy
+		;;
+	--destroy)
+		wpblog_destroy
+		;;
+	*)
+		echo "Usage: wpblog-pod-manage [--pod-deploy|--kube-deploy|--destroy]"
+		echo ""
+		echo "  --pod-deploy    use podman pod to deploy blog pod"
+		echo "  --kube-deploy   use podman kube play to deploy blog pod"
+		echo "  --destroy       stop, rm blog pod and remove persistent directory"
+		echo ""
+		;;
+esac
+
