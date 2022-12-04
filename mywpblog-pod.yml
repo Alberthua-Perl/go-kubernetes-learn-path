@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: mywpblog
+  name: mywpblog
+spec:
+  automountServiceAccountToken: false
+  containers:
+  - args:
+    - mysqld
+    env:
+    - name: MYSQL_USER
+      value: wp_user
+    - name: MYSQL_ROOT_PASSWORD
+      value: redhat
+    - name: MYSQL_PASSWORD
+      value: wp_pass
+    - name: MYSQL_DATABASE
+      value: wp_blog
+    image: docker.io/library/mysql:5.7.40-debian
+    name: wpdatabase
+    ports:
+    - containerPort: 3306
+      hostPort: 3306
+    resources: {}
+    securityContext:
+      capabilities:
+        drop:
+        - CAP_MKNOD
+        - CAP_NET_RAW
+        - CAP_AUDIT_WRITE
+    volumeMounts:
+    - mountPath: /var/lib/mysql
+      name: tmp-wpdbfiles-host-0
+  - args:
+    - apache2-foreground
+    env:
+    - name: WORDPRESS_DB_NAME
+      value: wp_blog
+    - name: WORDPRESS_DB_HOST
+      value: "0.0.0.0"
+    - name: WORDPRESS_DB_USER
+      value: wp_user
+    - name: WORDPRESS_DB_PASSWORD
+      value: wp_pass
+    image: docker.io/library/wordpress:6.1.1-php7.4-apache
+    name: wpfrontend
+    ports:
+      - containerPort: 80
+        hostPort: 8080
+    resources: {}
+    securityContext:
+      capabilities:
+        drop:
+        - CAP_MKNOD
+        - CAP_NET_RAW
+        - CAP_AUDIT_WRITE
+    volumeMounts:
+    - mountPath: /var/www/html
+      name: tmp-wpfront-host-0
+  enableServiceLinks: false
+  hostname: mywpblog
+  restartPolicy: Never
+  volumes:
+  - hostPath:
+      path: /tmp/wpdbfiles
+      type: Directory
+    name: tmp-wpdbfiles-host-0
+  - hostPath:
+      path: /tmp/wpfront
+      type: Directory
+    name: tmp-wpfront-host-0
+status: {}
