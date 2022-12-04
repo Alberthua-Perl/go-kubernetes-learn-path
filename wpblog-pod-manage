@@ -7,7 +7,7 @@
 # 	- 1. podman pod create and attach other containers
 #   - 2. podman kube play according to structed Kubernetes YAML
 #
-# Created by hualf on 2022-12-01
+# Created by hualf <hualongfeiyyy@163.com> on 2022-12-01
 #
 
 function env_precheck() {
