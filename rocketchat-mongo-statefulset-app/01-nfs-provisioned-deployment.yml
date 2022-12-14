@@ -33,9 +33,10 @@ spec:
             - name: NFS_SERVER
               value: 192.168.110.162
             - name: NFS_PATH
-              value: /data/k8s/rocketchat-mongodb-app
+              value: /data/k8s
+              # must create subdir named namespace as basename
       volumes:
         - name: nfs-client-root
           nfs:
             server: 192.168.110.162
-            path: /data/k8s/rocketchat-mongodb-app
+            path: /data/k8s
