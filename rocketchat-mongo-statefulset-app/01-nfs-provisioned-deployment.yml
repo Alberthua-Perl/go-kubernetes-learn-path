@@ -33,9 +33,9 @@ spec:
             - name: NFS_SERVER
               value: 192.168.110.162
             - name: NFS_PATH
-              value: /data/k8s
+              value: /data/k8s/rocketchat-mongodb-app
       volumes:
         - name: nfs-client-root
           nfs:
             server: 192.168.110.162
-            path: /data/k8s
+            path: /data/k8s/rocketchat-mongodb-app
