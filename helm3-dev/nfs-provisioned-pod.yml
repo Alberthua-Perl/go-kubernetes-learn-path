@@ -1,0 +1,21 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: nfs-provisioned-pod
+spec:
+  containers:
+  - name: nfs-provisioned-pod
+    image: docker.io/library/busybox:1.35
+    command:
+      - "/bin/sh"
+    args:
+      - "-c"
+      - "sleep 3600s"
+    volumeMounts:
+      - name: nfs-pvc
+        mountPath: "/mnt"
+  restartPolicy: "Never"
+  volumes:
+    - name: nfs-pvc
+      persistentVolumeClaim:
+        claimName: nfs-provisioned-claim
