@@ -6,4 +6,4 @@
 
 - 🐳 Include associated yaml files and programmes for Kubernetes advanced learn path.
 
-- 📜 YAML file format: `<resource_name>-<type>-<namespace>.yml` or `<resource_name>-<type>.yml`
+- 📜 YAML file format: **`<resource_name>-<type>-<namespace>.yml`** or **`<resource_name>-<type>.yml`**
