@@ -1,0 +1,92 @@
+### Create workload envoy deployment and service yaml file
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2021-07-19T05:33:36Z"
+  labels:
+    app: route
+  name: route
+spec:
+  ports:
+  - name: https
+    nodePort: 8443
+    port: 8443
+    targetPort: 0
+    protocol: TCP
+  - name: http
+    nodePort: 8080
+    port: 8080
+    targetPort: 0
+    protocol: TCP
+  selector:
+    app: route
+  type: NodePort
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: route
+  name: route
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: envoy
+  template:
+    metadata:
+      labels:
+        app: envoy
+    spec:
+      containers:
+      - args:
+          - envoy
+          - -c
+          - /etc/envoy/envoy.yaml
+        command:
+        - /docker-entrypoint.sh
+        env:
+        - name: TZ
+          value: Asia/Shanghai
+        - name: ENVOY_UID
+          value: "0"
+        image: docker.io/envoyproxy/envoy:v1.20.0
+        name: envoy
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: true
+          capabilities: {}
+          privileged: false
+          readOnlyRootFilesystem: false
+        stdin: true
+        tty: true
+        volumeMounts:
+        - mountPath: /etc/envoy
+          name: vol-data-route-envoy
+        ports:
+        - containerPort: 443
+          protocol: TCP
+          hostPort: 443
+        - containerPort: 80
+          protocol: TCP
+          hostPort: 80
+        dnsConfig: {}
+        restartPolicy: Never
+      volumes:
+      - hostPath:
+          path: /data/route/envoy
+        type: Directory
+        name: vol-data-route-envoy
+    status: {}
+
+### Use podman kube play to create pod
+$ podman play kube ./workload-envoy.yaml
+$ podman pod ps
+  POD ID        NAME         STATUS      CREATED        INFRA ID      # OF CONTAINERS
+  f7533051505e  route-pod-0  Running     8 seconds ago  0c3ac431bcec  2
+$ podman ps -a
+  CONTAINER ID  IMAGE                               COMMAND               CREATED         STATUS             PORTS                                     NAMES
+  0c3ac431bcec  k8s.gcr.io/pause:3.5                                      38 seconds ago  Up 33 seconds ago  0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp  f7533051505e-infra
+  c2da4eee74dc  docker.io/envoyproxy/envoy:v1.20.0  envoy -c /etc/env...  33 seconds ago  Up 33 seconds ago  0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp  route-pod-0-envoy
