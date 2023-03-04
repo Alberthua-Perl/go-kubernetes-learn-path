@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"exportedIdentifierDemo"
-	// 该自定义包位于包默认存储目录 /usr/local/go/src/ 中
+	"./exportedIdentifierDemo"
+	// 该自定义包也可位于包默认存储目录 /usr/local/go/src/ 中
 )
 
 func main() {
