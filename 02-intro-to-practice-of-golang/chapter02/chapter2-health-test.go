@@ -5,26 +5,30 @@ import (
 	"fmt"
 	//"os"
 	//"bufio"  从 os.Stdin 标准输入或创建的文件句柄读取文件内容，也可输出内容。
-	//"strconv"  数值与字符串的相互转换
+	"strconv" // 数值与字符串的相互转换
 )
 
 func main() {
-	var weight, heigh, bmi float32  // 批量定义 float32 数据类型的变量
+	var weight, height, result, bmi float64 // 批量定义 float32 数据类型的变量
 
 	fmt.Printf("请输入您的体重(KG): ")
-	fmt.Scan(&weight)  
+	fmt.Scan(&weight)
 	/* fmt.Scan() 函数直到标准输入中传递参数前，始终处于阻塞状态。
 	   fmt.Scan() 函数可以接受数值或字符串的指针变量
 	*/
 	//fmt.Printf("weight 的值：%v\n", weight)
-	
+
 	fmt.Printf("请输入您的身高(M): ")
-	fmt.Scan(&heigh)
+	fmt.Scan(&height)
 	//fmt.Printf("heigh 的值：%v\n", heigh)
 
-	bmi = weight / (heigh * heigh)  // BMI 指数的计算公式
+	result = weight / (height * height) // BMI 指数的计算公式
+	bmi, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", result), 64)
+	/* fmt.Sprintf() 函数返回字符串，因此使用 strconv.ParseFloat() 函数转换字符串为
+	   float64 浮点数。
+	*/
 	fmt.Printf("您的 BMI 指数为：%v\n", bmi)
-	
+
 	// if 条件判断语句
 	if bmi < 18.4 {
 		fmt.Println("您的体重过轻")
@@ -51,4 +55,12 @@ func getStdin(f *os.File) string {
 	}
 	return content
 }
+*/
+
+/* 请区分以下 fmt 包中函数的使用方法：
+   fmt.Print()：标准输出打印
+   fmt.Println()：标准输出打印返回换行符
+   fmt.Printf()：格式化标准输出打印
+   fmt.Sprintf()：格式化标准输出打印返回字符串
+   fmt.Fprint()：格式化标准输出打印返回字符串与字节数
 */
