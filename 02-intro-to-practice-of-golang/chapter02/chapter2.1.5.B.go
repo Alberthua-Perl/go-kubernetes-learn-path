@@ -1,3 +1,4 @@
+// 导入标识符用于导入自定义包中的变量
 package main
 
 import (

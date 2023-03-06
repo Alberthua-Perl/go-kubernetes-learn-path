@@ -6,15 +6,15 @@ import (
 )
 
 func main() {
-	// 常量定义的多种方式
+	// 常量声明的多种方式
 	const a int = 10
 	const b = 10
-	// 定义并赋值整型常量
+	// 声明并赋值整型常量
 	const (
 		c int = 10
 		d string = "golang"
 	)
-	// 定义并赋值整型与字符串常量
+	// 声明并赋值整型与字符串常量
 	//const e, f int string = 20, "rock"
 	const e, f = 20, "rock"
 

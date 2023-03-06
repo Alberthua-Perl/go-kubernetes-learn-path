@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	var weight, height, result, bmi float64 // 批量定义 float32 数据类型的变量
+	var weight, height, result, bmi float64 // 批量声明 float64 数据类型的变量
 
 	fmt.Printf("请输入您的体重(KG): ")
 	fmt.Scan(&weight)
@@ -25,9 +25,10 @@ func main() {
 	result = weight / (height * height) // BMI 指数的计算公式
 	bmi, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", result), 64)
 	/* fmt.Sprintf() 函数返回字符串，因此使用 strconv.ParseFloat() 函数转换字符串为
-	   float64 浮点数。
+	   float64 浮点数，并使用空白标识符省略 err 返回值。
 	*/
-	fmt.Printf("您的 BMI 指数为：%v\n", bmi)
+	n, _ := fmt.Printf("您的 BMI 指数为：%v\n", bmi) // 省略 err 输出
+	fmt.Printf("前一条标准输出的字节数为：%v bytes\n", n)
 
 	// if 条件判断语句
 	if bmi < 18.4 {
@@ -58,9 +59,11 @@ func getStdin(f *os.File) string {
 */
 
 /* 请区分以下 fmt 包中函数的使用方法：
-   fmt.Print()：标准输出打印
-   fmt.Println()：标准输出打印返回换行符
-   fmt.Printf()：格式化标准输出打印
-   fmt.Sprintf()：格式化标准输出打印返回字符串
-   fmt.Fprint()：格式化标准输出打印返回字符串与字节数
+   fmt.Print()：打印标准输出
+   fmt.Println()：打印标准输出并追加换行符
+   fmt.Printf()：打印格式化标准输出
+   fmt.Sprintf()：打印字符串的格式化标准输出并返回字符串
+   fmt.Fprint()：打印格式化标准输出并返回字符串
+
+   以上函数均可返回实际输出的 bytes 字节数。
 */
