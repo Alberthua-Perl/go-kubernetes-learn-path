@@ -4,4 +4,12 @@
 
 - Use golang to implement simple functions.
 
-- Common standard libraries: `os`, `io`, `fmt`, `strconv`, `math`
+- Common standard libraries: 
+  - **`os`**
+  - **`io`**
+  - **`fmt`**
+  - **`strings`**
+  - **`strconv`**
+  - **`bytes`**
+  - **`math`**
+  
