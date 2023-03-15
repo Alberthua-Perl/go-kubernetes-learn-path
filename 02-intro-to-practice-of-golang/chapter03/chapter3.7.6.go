@@ -1,4 +1,4 @@
-// 字符串索引与字符串截取
+// 字符串索引与截取
 package main
 
 import (
