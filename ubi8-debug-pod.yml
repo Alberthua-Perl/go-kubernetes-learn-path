@@ -1,0 +1,13 @@
+# installed iproute, iputils and bind-utils packages used to debug network issues
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: ubi8-debug
+  name: ubi8-debug
+spec:
+  containers:
+  - image: quay.io/alberthua/ubi8-debug:1.0
+    imagePullPolicy: IfNotPresent
+    name: ubi8-debug
+    command: ["/bin/sh", "-c", "sleep 86400s"]
