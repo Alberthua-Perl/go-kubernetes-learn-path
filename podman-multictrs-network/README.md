@@ -4,7 +4,8 @@ In this demo we will create two podman containers called `times-app` exposed 808
 and `cities-app` exposed 8090/tcp port which are all in the `cities` container network based
 `cni` network backend.
 
-In `rootless` network namespace, we create container network and containers:
+In `rootless` network namespace, we create container network and containers, and use `Containerfile`
+in app directory to build app image:
 
 ```bash
 $ podman network create cities
